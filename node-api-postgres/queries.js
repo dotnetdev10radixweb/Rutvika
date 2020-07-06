@@ -21,7 +21,7 @@ const getUserById = (request, response) => {
   
     pool.query('SELECT * FROM "Users" WHERE "UserId" = $1', [id], (error, results) => {
       if (error) {
-        throw error
+        throw 'error'
       }
       response.status(200).json(results.rows)
     })
@@ -32,7 +32,7 @@ const createUser = (request, response) => {
   
     pool.query('INSERT INTO "Users" ("UserName", "MobileNumber", "EmailId", "CreatedDateTime", "UpdatedDateTime") VALUES ($1, $2, $3, $4, $5)', [username, mobilenumber,emailId, createddate, updateddate], (error, results) => {
       if (error) {
-        throw error
+        throw 'error'
       }
       response.status(201).send(`User added`)
     })
@@ -47,7 +47,7 @@ const createUser = (request, response) => {
       [username, mobilenumber, emailId, updateddate,id],
       (error, results) => {
         if (error) {
-          throw error
+          throw 'error'
         }
         response.status(200).send(`User modified with ID: ${id}`)
       }
@@ -59,7 +59,7 @@ const createUser = (request, response) => {
   
     pool.query('DELETE FROM "Users" WHERE "UserId" = $1', [id], (error, results) => {
       if (error) {
-        throw error
+        throw 'error'
       }
       response.status(200).send(`User deleted with ID: ${id}`)
     })
