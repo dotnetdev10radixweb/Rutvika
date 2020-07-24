@@ -1,0 +1,5722 @@
+{
+	"openapi": "3.0.1",
+	"info": {
+		"description": "BoardActive API",
+		"version": "1.0.0",
+		"title": "BoardActive",
+		"termsOfService": "https://www.boardactive.com/privacy",
+		"contact": {
+			"email": "info@boardactive.com"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"externalDocs": {
+		"description": "Find out more",
+		"url": "https://boardactive.com/"
+	},
+	"servers": [
+		{
+			"url": "http://local.boardactive.com:3000/"
+		},
+		{
+			"url": "http://local.boardactive.com:3000/"
+		}
+	],
+	"tags": [
+		{
+			"name": "Auth",
+			"description": "Authenticate user",
+			"externalDocs": {
+				"description": "Find out more",
+				"url": "https://boardactive.com/"
+			}
+		},
+		{
+			"name": "Users",
+			"description": "Users Details"
+		},
+		{
+			"name": "Payment Method",
+			"description": "Payment Method Details"
+		},
+		{
+			"name": "Billing Plans",
+			"description": "Billing Plans Details"
+		},
+		{
+			"name": "Apps",
+			"description": "Apps Details"
+		},
+		{
+			"name": "Organizations",
+			"description": "Organizations Details"
+		},
+		{
+			"name": "White label",
+			"description": "White label Details"
+		},
+		{
+			"name": "Subscriptions",
+			"description": "Subscriptions Details"
+		},
+		{
+			"name": "Attributes",
+			"description": "Attributes Details"
+		},
+		{
+			"name": "Places",
+			"description": "Places Details"
+		},
+		{
+			"name": "Place Types",
+			"description": "Place Types Details"
+		},
+		{
+			"name": "Messages",
+			"description": "Messages Details"
+		},
+		{
+			"name": "Mobile User endpoints",
+			"description": "Mobile User endpoints Details"
+		},
+		{
+			"name": "Events",
+			"description": "Events Details"
+		},
+		{
+			"name": "Audiences",
+			"description": "Audiences Details"
+		}
+	],
+	"paths": {
+		"/web/v1/login": {
+			"post": {
+				"tags": [
+					"Auth"
+				],
+				"summary": "Logs user into the system",
+				"requestBody": {
+					"description": "Login user",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LoginModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Successfully authenticated. The session ID is returned in a cookie named `boardactive-session`. You need to include this cookie in subsequent requests.",
+						"headers": {
+							"Set-Cookie": {
+								"schema": {
+									"type": "string",
+									"example": "boardactive-session; Path=/; HttpOnly"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Required request body property (email/password) was not included or was null"
+					},
+					"401": {
+						"description": "Email does not exist / Incorrect Password"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/logout": {
+			"post": {
+				"tags": [
+					"Auth"
+				],
+				"summary": "Logs user out of the system",
+				"responses": {
+					"200": {
+						"description": "Successfully logged out"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/auth-config/google": {
+			"get": {
+				"tags": [
+					"Auth"
+				],
+				"summary": "Authenticates user from google",
+				"responses": {
+					"200": {
+						"description": "User authenticated successfully"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/auth-config/braintree-client-token": {
+			"get": {
+				"tags": [
+					"Auth"
+				],
+				"summary": "Finds braintree client token",
+				"responses": {
+					"200": {
+						"description": "User authenticated successfully"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/users": {
+			"post": {
+				"tags": [
+					"Users"
+				],
+				"summary": "Creates user",
+				"requestBody": {
+					"description": "Creates user",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateUserModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "User created"
+					},
+					"400": {
+						"description": "Required request body property (isCompliant/ email/ password) was not included or was null / User with this email already claimed"
+					},
+					"500": {
+						"description": "Error Creating User"
+					}
+				},
+				"security": []
+			},
+			"get": {
+				"tags": [
+					"Users"
+				],
+				"summary": "God Fetch",
+				"responses": {
+					"200": {
+						"description": "User found"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/users/check-email": {
+			"post": {
+				"tags": [
+					"Users"
+				],
+				"summary": "Checks user email",
+				"requestBody": {
+					"description": "Checks user email",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CheckEmailUserModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "User email verified"
+					},
+					"400": {
+						"description": "Required request body property (email) was not included or was null"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/users/password": {
+			"put": {
+				"tags": [
+					"Users"
+				],
+				"summary": "Reset password",
+				"requestBody": {
+					"description": "Reset password",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PasswordUserModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Password reset successfully"
+					},
+					"400": {
+						"description": "Required request body property (token/ password) was not included or was null / Token is invalid or expired"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/users/password/reset": {
+			"post": {
+				"tags": [
+					"Users"
+				],
+				"summary": "Send Reset password Email",
+				"requestBody": {
+					"description": "Send Reset password Email",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PasswordResetUserModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Reset password email sent"
+					},
+					"400": {
+						"description": "Required request body property (email) was not included or was null"
+					},
+					"404": {
+						"description": "User does not exists"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/users/claim": {
+			"put": {
+				"tags": [
+					"Users"
+				],
+				"summary": "Claims user",
+				"requestBody": {
+					"description": "Claims user",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ClaimUserModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "User claim successfully"
+					},
+					"400": {
+						"description": "Required request body property (token / password) was not included or was null / Token is invalid or expired / User with this email already claimed"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/users/claim/resend": {
+			"post": {
+				"tags": [
+					"Users"
+				],
+				"summary": "Resend Claim User Email",
+				"requestBody": {
+					"description": "Resend Claim User Email",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ResendClaimUserModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Successfully resent claim user email"
+					},
+					"400": {
+						"description": "Required request body property (email) was not included or was null / User with this email already claimed"
+					},
+					"404": {
+						"description": "User with email does not exist"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/users/ack": {
+			"put": {
+				"tags": [
+					"Users"
+				],
+				"summary": "Verify user",
+				"requestBody": {
+					"description": "Verify user",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AckUserModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "User verified successfully"
+					},
+					"400": {
+						"description": "Required request body property (token) was not included or was null / Token is not tied to user / token is not tied to the current user / token is expired / User is already verified"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/me": {
+			"get": {
+				"tags": [
+					"Users"
+				],
+				"summary": "Find user",
+				"responses": {
+					"200": {
+						"description": "User found"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			},
+			"put": {
+				"tags": [
+					"Users"
+				],
+				"summary": "Updates current user",
+				"requestBody": {
+					"description": "Updates current user",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateUserModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "User updated successfully"
+					},
+					"400": {
+						"description": "User with this email already claimed / Password must be 6 or more characters"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/users/ack/resend": {
+			"post": {
+				"tags": [
+					"Users"
+				],
+				"summary": "Resend Verification Email",
+				"responses": {
+					"200": {
+						"description": "Verification email resent"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/me/feedback": {
+			"post": {
+				"tags": [
+					"Users"
+				],
+				"summary": "Submit user feedback",
+				"requestBody": {
+					"description": "Submit user feedback",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/FeedbackUserModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Feedback submitted"
+					},
+					"400": {
+						"description": "Required request body property (data) was not included or was null"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/users/{id}": {
+			"get": {
+				"tags": [
+					"Users"
+				],
+				"summary": "God Find",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "User found"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			},
+			"put": {
+				"tags": [
+					"Users"
+				],
+				"summary": "God Update",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"requestBody": {
+					"description": "God Update",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/GodUpdateUserModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "User updated successfully"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "Unauthorized to use this endpoint"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/me/payment-methods": {
+			"get": {
+				"tags": [
+					"Payment Method"
+				],
+				"summary": "Fetch payment methods",
+				"responses": {
+					"200": {
+						"description": "Successfully fetched payment methods"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			},
+			"post": {
+				"tags": [
+					"Payment Method"
+				],
+				"summary": "Create payment methods",
+				"requestBody": {
+					"description": "Create payment methods",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreatePaymentMethodModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Successfully created payment method"
+					},
+					"400": {
+						"description": "Required request body property (nonce) was not included or was null / Could not create customer and payment method"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/me/payment-methods/{id}/trash": {
+			"put": {
+				"tags": [
+					"Payment Method"
+				],
+				"summary": "Trash payment methods",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successfully trashed payment methods"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/billing-plans": {
+			"get": {
+				"tags": [
+					"Billing Plans"
+				],
+				"summary": "Fetch billing plans",
+				"responses": {
+					"200": {
+						"description": "Successfully fetched billing plans"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"503": {
+						"description": "An external service is unavailable at this time"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/apps/check-app": {
+			"post": {
+				"tags": [
+					"Apps"
+				],
+				"summary": "Check App",
+				"requestBody": {
+					"description": "Check App",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CheckAppModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "App verified successfully"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/apps": {
+			"post": {
+				"tags": [
+					"Apps"
+				],
+				"summary": "Create App",
+				"requestBody": {
+					"description": "Create App",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateAppModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "App created successfully"
+					},
+					"400": {
+						"description": "Required request body property (name) was not included or was null"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			},
+			"get": {
+				"tags": [
+					"Apps"
+				],
+				"summary": "Fetch App",
+				"responses": {
+					"200": {
+						"description": "Successfully fetched app"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/apps/{id}": {
+			"get": {
+				"tags": [
+					"Apps"
+				],
+				"summary": "Find App by Id",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "App found"
+					},
+					"400": {
+						"description": "Malformed Path: /web/v1/apps/"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "App with given id was not found"
+					}
+				},
+				"security": []
+			},
+			"put": {
+				"tags": [
+					"Apps"
+				],
+				"summary": "Updates App by Id",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Updates App by Id",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateAppModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "App updated successfully"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "App with given id was not found"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/apps/{id}/users": {
+			"post": {
+				"tags": [
+					"Apps"
+				],
+				"summary": "Invite User to App",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Invite User to App",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/InviteUserToAppModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Successfully invited user to app"
+					},
+					"400": {
+						"description": "Required request body property (role / email) was not included or was null/ User with email already invited to this app"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "App with given id was not found"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/apps/{id}/users/{userId}/reinvite": {
+			"post": {
+				"tags": [
+					"Apps"
+				],
+				"summary": "Resend Invite Email",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "userId",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Invite email resent"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "App / User with given id not found"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/apps/{id}/users/{userId}/trash": {
+			"put": {
+				"tags": [
+					"Apps"
+				],
+				"summary": "Remove User from App",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "userId",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "User removed from app"
+					},
+					"401": {
+						"description": "You are not authorized to remove users from this app"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "App / User with given id not found"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/apps/{id}/users/{userId}": {
+			"put": {
+				"tags": [
+					"Apps"
+				],
+				"summary": "Updates App User",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "userId",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Updates App User",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateAppUserModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Updated App User"
+					},
+					"400": {
+						"description": "Required request body property (role) was not included or was null"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/organizations": {
+			"post": {
+				"tags": [
+					"Organizations"
+				],
+				"summary": "Create Organization",
+				"requestBody": {
+					"description": "Create Organization",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateOrgModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Organization created successfully"
+					},
+					"400": {
+						"description": "Required request body property (name) was not included or was null"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/organizations/{organizationId}/apps/{appId}": {
+			"put": {
+				"tags": [
+					"Organizations"
+				],
+				"summary": "Add App to Organization",
+				"parameters": [
+					{
+						"name": "organizationId",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "appId",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "App added to organization"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "Organization with given id does not exist"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/apps/{id}/white-label": {
+			"put": {
+				"tags": [
+					"White label"
+				],
+				"summary": "Update White label",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Update White label",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateWhiteLabelModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "White label updated"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first / You must be an admin or owner to edit this"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/apps/{id}/white-label/images": {
+			"put": {
+				"tags": [
+					"White label"
+				],
+				"summary": "Update White label logo",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"image": {
+										"type": "string",
+										"format": "binary"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "White label logo updated"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first / You must be an admin or owner to edit this"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/apps/{id}/subscribe": {
+			"put": {
+				"tags": [
+					"Subscriptions"
+				],
+				"summary": "Subscribe",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Subscribe",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SubscribeModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Subscribe successfully"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included/ Required request body property (paymentMethodId/ billingPlanId) was not included or was null / This app already exists"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "Billing Plan with given does not exist / Payment Method with given id does not exist for current user"
+					},
+					"500": {
+						"description": "Subscription could not be created at this time"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/apps/{id}/unsubscribe": {
+			"put": {
+				"tags": [
+					"Subscriptions"
+				],
+				"summary": "Unsubscribe",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Unsubscribe",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UnsubscribeModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Unsubscribe successfully"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "Requested resource not found"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/apps/{id}/config": {
+			"put": {
+				"tags": [
+					"Apps"
+				],
+				"summary": "Update App config",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Update App config",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateAppConfigModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Updated App config"
+					},
+					"400": {
+						"description": "Required request body property (iOSBundleIdentifier / androidBundleIdentifier / firebaseProjectId / firebaseClientEmail / firebasePrivateKey) was not included or was null / Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "App with given id was not found"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/apps/{id}/images": {
+			"put": {
+				"tags": [
+					"Apps"
+				],
+				"summary": "Uploads App Icon",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"image": {
+										"type": "string",
+										"format": "binary"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Uploaded App Icon"
+					},
+					"400": {
+						"description": "Required request body property (image) was not included or was null / Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/me/images": {
+			"put": {
+				"tags": [
+					"Apps"
+				],
+				"summary": "Uploads Avatar Image",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"image": {
+										"type": "string",
+										"format": "binary"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Uploaded Avatar Image"
+					},
+					"400": {
+						"description": "Required request body property (image) was not included or was null / Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/attributes": {
+			"get": {
+				"tags": [
+					"Attributes"
+				],
+				"summary": "Finds Attributes",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Attribute fetched successfully"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			},
+			"post": {
+				"tags": [
+					"Attributes"
+				],
+				"summary": "Create attributes",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Create attributes",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateAttributeModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Attribute created successfully"
+					},
+					"400": {
+						"description": "Required request body property (name/ type) was not included or was null / Required Header (ba-app-id) was not included / An attribute with this name already exists"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"500": {
+						"description": "Type must be a string / Invalid type / Error creating custom attribute"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/attributes/{id}": {
+			"put": {
+				"tags": [
+					"Attributes"
+				],
+				"summary": "Updates attributes",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 500
+						}
+					},
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Updates attributes",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateAttributeModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Attribute updated"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"500": {
+						"description": "Error updating custom attribute"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/attributes/{id}/trash": {
+			"put": {
+				"tags": [
+					"Attributes"
+				],
+				"summary": "Trash attributes",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 500
+						}
+					},
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Attribute trashed"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"500": {
+						"description": "Error trashing custom attribute"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/attributes/{id}/restore": {
+			"put": {
+				"tags": [
+					"Attributes"
+				],
+				"summary": "Restore attributes",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 500
+						}
+					},
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Attribute restored"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"500": {
+						"description": "Error restoring custom attribute"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/places": {
+			"post": {
+				"tags": [
+					"Places"
+				],
+				"summary": "Create Place",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Create Place",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreatePlaceModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Place created"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included/ Required request body property (geofence) was not included or was null / Radius of given m is not within accepted range / Must include coordinates array / Polygons must have at least 3 coordinates / Invalid geofence type / Place Type with given id does not exist"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			},
+			"get": {
+				"tags": [
+					"Places"
+				],
+				"summary": "List places with pageLimit",
+				"parameters": [
+					{
+						"name": "pageLimit",
+						"in": "query",
+						"schema": {
+							"type": "integer",
+							"default": 15
+						}
+					},
+					{
+						"name": "page",
+						"in": "query",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included / pageLimit must be a number / page must be a number"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/places/bulk": {
+			"post": {
+				"tags": [
+					"Places"
+				],
+				"summary": "Bulk Create Place",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Bulk Create Place",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/BulkCreatePlaceModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Bulk Places Created"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included/ Required request body property (places) was not included or was null"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/places/all": {
+			"get": {
+				"tags": [
+					"Places"
+				],
+				"summary": "List places",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/places/top": {
+			"get": {
+				"tags": [
+					"Places"
+				],
+				"summary": "Fetch top places",
+				"parameters": [
+					{
+						"name": "pageLimit",
+						"in": "query",
+						"schema": {
+							"type": "integer",
+							"default": 15
+						}
+					},
+					{
+						"name": "page",
+						"in": "query",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "start",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"default": "2019-06-13T19:30:45.648Z"
+						}
+					},
+					{
+						"name": "end",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"default": "2019-06-30T19:30:45.648Z"
+						}
+					},
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Top places found"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included/ start or end is not a valid date string / pageLimit must be a number / page must be a number"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/places/{id}": {
+			"get": {
+				"tags": [
+					"Places"
+				],
+				"summary": "Details of place",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1078
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "Place with given id was not found"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			},
+			"put": {
+				"tags": [
+					"Places"
+				],
+				"summary": "Update place",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1078
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Update place",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdatePlaceModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Updated place"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included/ Required request body property (geofence) was not included or was null / Radius of given m is not within accepted range / Must include coordinates array / Polygons must have at least 3 coordinates / Invalid geofence type / Place Type with given id does not exist"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "Place with given id was not found"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/places/{id}/trash": {
+			"put": {
+				"tags": [
+					"Places"
+				],
+				"summary": "Trash place",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Trashed place"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/places/{id}/restore": {
+			"put": {
+				"tags": [
+					"Places"
+				],
+				"summary": "Restore place",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Place Restored"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/places/{id}/destroy": {
+			"put": {
+				"tags": [
+					"Places"
+				],
+				"summary": "Destroy place",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Place deleted"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/place-types": {
+			"post": {
+				"tags": [
+					"Place Types"
+				],
+				"summary": "Create place types",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Create place types",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreatePlaceTypeModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Place type created"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included / Required request body property (name) was not included or was null"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			},
+			"get": {
+				"tags": [
+					"Place Types"
+				],
+				"summary": "Fetch place types",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/place-types/{id}": {
+			"get": {
+				"tags": [
+					"Place Types"
+				],
+				"summary": "Find place types",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "Place Type with given id does not exist"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			},
+			"put": {
+				"tags": [
+					"Place Types"
+				],
+				"summary": "Update place types",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Update place types",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdatePlaceTypeModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Place type updated"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "Place Type with given id does not exist"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/place-types/{id}/trash": {
+			"put": {
+				"tags": [
+					"Place Types"
+				],
+				"summary": "Delete place types",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Place type deleted"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "Place Type with given id does not exist"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/place-types/{id}/restore": {
+			"put": {
+				"tags": [
+					"Place Types"
+				],
+				"summary": "Restore place types",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Place type restored"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "Place Type with given id does not exist"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/messages": {
+			"post": {
+				"tags": [
+					"Messages"
+				],
+				"summary": "Create message",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Create message",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateMessageModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Message Created"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included/ Invalid type given for property timeBetween. Must be of type integer"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			},
+			"get": {
+				"tags": [
+					"Messages"
+				],
+				"summary": "List messages with pageLimit",
+				"parameters": [
+					{
+						"name": "pageLimit",
+						"in": "query",
+						"schema": {
+							"type": "integer",
+							"default": 15
+						}
+					},
+					{
+						"name": "page",
+						"in": "query",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included / pageLimit must be a number / page must be a number"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/messages/all": {
+			"get": {
+				"tags": [
+					"Messages"
+				],
+				"summary": "List messages with pageLimit",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Fetch all message"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/messages/top": {
+			"get": {
+				"tags": [
+					"Messages"
+				],
+				"summary": "Fetch top messages",
+				"parameters": [
+					{
+						"name": "pageLimit",
+						"in": "query",
+						"schema": {
+							"type": "integer",
+							"default": 15
+						}
+					},
+					{
+						"name": "page",
+						"in": "query",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "start",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"default": "2019-06-13T19:30:45.648Z"
+						}
+					},
+					{
+						"name": "end",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"default": "2019-06-30T19:30:45.648Z"
+						}
+					},
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Top messages found"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included/ start or end is not a valid date string / pageLimit must be a number / page must be a number"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/messages/{id}": {
+			"get": {
+				"tags": [
+					"Messages"
+				],
+				"summary": "Find message",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1185
+						}
+					},
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Fetch message by id"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "Message with given id was not found"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			},
+			"put": {
+				"tags": [
+					"Messages"
+				],
+				"summary": "Update message",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Update message",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateMessageModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Message Updated"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "Message with given id was not found"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/messages/{id}/images": {
+			"put": {
+				"tags": [
+					"Messages"
+				],
+				"summary": "Uploads Notification Image",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1185
+						}
+					},
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"image": {
+										"type": "string",
+										"format": "binary"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Notification image updated"
+					},
+					"400": {
+						"description": "Required request body property (image) was not included or was null / Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "Message with given id was not found / No notificationB found for messageId"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/messages/{id}/images/b": {
+			"put": {
+				"tags": [
+					"Messages"
+				],
+				"summary": "Uploads NotificationB Image",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1185
+						}
+					},
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"image": {
+										"type": "string",
+										"format": "binary"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "NotificationB image updated"
+					},
+					"400": {
+						"description": "Required request body property (image) was not included or was null / Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "Message with given id was not found / No notificationB found for messageId "
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/messages/{id}/test": {
+			"post": {
+				"tags": [
+					"Messages"
+				],
+				"summary": "Send Test message",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1185
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Send Test message",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SendTestMessageModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Test message sent"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "Message with given id was not found"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/messages/{id}/broadcast": {
+			"post": {
+				"tags": [
+					"Messages"
+				],
+				"summary": "Send broadcast message",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1185
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Broadcast message sent"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "Message with given id was not found"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/messages/{id}/trash": {
+			"put": {
+				"tags": [
+					"Messages"
+				],
+				"summary": "Trash message",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1185
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Message Trashed"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/messages/{id}/restore": {
+			"put": {
+				"tags": [
+					"Messages"
+				],
+				"summary": "Restore message",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1185
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Message Restored"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/messages/{id}/destroy": {
+			"put": {
+				"tags": [
+					"Messages"
+				],
+				"summary": "Destroy message",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1185
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Message destroyed"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/mobile-users/search": {
+			"post": {
+				"tags": [
+					"Mobile User endpoints"
+				],
+				"summary": "Search mobile user",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Search mobile user",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SearchMobileUserModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Success"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			},
+			"get": {
+				"tags": [
+					"Mobile User endpoints"
+				],
+				"summary": "Find mobile user",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "query",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "pageNumber",
+						"in": "query",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success"
+					},
+					"400": {
+						"description": "Required request body property (id/ pageNumber) was not included or null / Required Header (ba-app-id) was not included "
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "Search with given id does not exist"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/mobile-users/{id}": {
+			"get": {
+				"tags": [
+					"Mobile User endpoints"
+				],
+				"summary": "Fetch mobile user",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "Mobile user with given id does not exist"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			},
+			"put": {
+				"tags": [
+					"Mobile User endpoints"
+				],
+				"summary": "Update mobile user",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Update mobile user",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateMobileUserModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Mobile user updated"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "Mobile user with given id does not exist"
+					},
+					"500": {
+						"description": "Invalid id / Cannot read property 'stock' of undefined"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/mobile-users/{id}/updates": {
+			"get": {
+				"tags": [
+					"Mobile User endpoints"
+				],
+				"summary": "Fetch update mobile user",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/mobile-users/{id}/places": {
+			"get": {
+				"tags": [
+					"Mobile User endpoints"
+				],
+				"summary": "Fetch mobile user by places",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "Mobile user with given id does not exist"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/mobile-users/{id}/delete": {
+			"put": {
+				"tags": [
+					"Mobile User endpoints"
+				],
+				"summary": "Delete mobile user",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successfully deleted mobile user"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "Mobile user with given id does not exist"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/events": {
+			"post": {
+				"tags": [
+					"Events"
+				],
+				"summary": "Create new event",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Create new event",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateEventModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Event created"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included / Required request body property (name) was not included or was null"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			},
+			"get": {
+				"tags": [
+					"Events"
+				],
+				"summary": "Fetch all events",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Event found"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/events/{id}": {
+			"put": {
+				"tags": [
+					"Events"
+				],
+				"summary": "Update event",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Update event",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateEventModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Event updated"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included / Required request body property (name) was not included or was null"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "Event with given id does not exist"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/events/{id}/trash": {
+			"put": {
+				"tags": [
+					"Events"
+				],
+				"summary": "Trash event",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Event trashed"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/events/{id}/restore": {
+			"put": {
+				"tags": [
+					"Events"
+				],
+				"summary": "Restore event",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Event restored"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "Event with given id does not exist"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/audiences/": {
+			"post": {
+				"tags": [
+					"Audiences"
+				],
+				"summary": "Create new audiences",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Create new audiences",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateAudienceModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Audience created"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included / Required request body property (mobileUserSearchId) was not included or was null"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "temp audience with given searchId was not found"
+					}
+				},
+				"security": []
+			},
+			"get": {
+				"tags": [
+					"Audiences"
+				],
+				"summary": "Fetch audiences",
+				"parameters": [
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Audiences found"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/audiences/top": {
+			"get": {
+				"tags": [
+					"Audiences"
+				],
+				"summary": "Fetch top audiences",
+				"parameters": [
+					{
+						"name": "pageLimit",
+						"in": "query",
+						"schema": {
+							"type": "integer",
+							"default": 15
+						}
+					},
+					{
+						"name": "page",
+						"in": "query",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "start",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"default": "2019-06-13T19:30:45.648Z"
+						}
+					},
+					{
+						"name": "end",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"default": "2019-06-30T19:30:45.648Z"
+						}
+					},
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Top audiences found"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included/ start or end is not a valid date string / pageLimit must be a number / page must be a number"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/audiences/{id}": {
+			"get": {
+				"tags": [
+					"Audiences"
+				],
+				"summary": "Gets audiences by ID",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "pageLimit",
+						"in": "query",
+						"schema": {
+							"type": "integer",
+							"default": 15
+						}
+					},
+					{
+						"name": "page",
+						"in": "query",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Audiences found"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "Audience with given id does not exist"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			},
+			"put": {
+				"tags": [
+					"Audiences"
+				],
+				"summary": "Update audience",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Update audience",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateAudienceModel"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Audience updated"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included / Required request body property (name) was not included or was null"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"404": {
+						"description": "Audience with given id does not exist"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/audiences/{id}/trash": {
+			"put": {
+				"tags": [
+					"Audiences"
+				],
+				"summary": "Trash audience",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Audience trashed"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		},
+		"/web/v1/audiences/{id}/restore": {
+			"put": {
+				"tags": [
+					"Audiences"
+				],
+				"summary": "Restore audience",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "ba-app-id",
+						"in": "header",
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Audience restored"
+					},
+					"400": {
+						"description": "Required Header (ba-app-id) was not included"
+					},
+					"403": {
+						"description": "You must verify your email first"
+					},
+					"500": {
+						"description": "Invalid id"
+					}
+				},
+				"security": []
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"LoginModel": {
+				"type": "object",
+				"properties": {
+					"email": {
+						"example": "abc@boardactive.com",
+						"type": "string"
+					},
+					"password": {
+						"example": "test123",
+						"type": "string"
+					}
+				},
+				"xml": {
+					"name": "LoginModel"
+				}
+			},
+			"CreateUserModel": {
+				"type": "object",
+				"properties": {
+					"email": {
+						"example": "abc+5@boardactive.com",
+						"type": "string"
+					},
+					"password": {
+						"example": "test123",
+						"type": "string"
+					},
+					"firstName": {
+						"example": "mike",
+						"type": "string"
+					},
+					"lastName": {
+						"example": "carlson",
+						"type": "string"
+					},
+					"isCompliant": {
+						"example": true,
+						"type": "boolean"
+					}
+				},
+				"xml": {
+					"name": "CreateUserModel"
+				}
+			},
+			"CheckEmailUserModel": {
+				"type": "object",
+				"properties": {
+					"email": {
+						"example": "abc+5@boardactive.com",
+						"type": "string"
+					}
+				},
+				"xml": {
+					"name": "CheckEmailUserModel"
+				}
+			},
+			"PasswordUserModel": {
+				"type": "object",
+				"properties": {
+					"email": {
+						"example": "abc@boardactive.com",
+						"type": "string"
+					},
+					"token": {
+						"example": "0b9a7e1e-9ac5-4ca2-835a-14ce71f93e0f",
+						"type": "string"
+					},
+					"password": {
+						"example": "test123",
+						"type": "string"
+					}
+				},
+				"xml": {
+					"name": "PasswordUserModel"
+				}
+			},
+			"PasswordResetUserModel": {
+				"type": "object",
+				"properties": {
+					"email": {
+						"example": "abc+2@boardactive.com",
+						"type": "string"
+					},
+					"password": {
+						"example": "test123",
+						"type": "string"
+					}
+				},
+				"xml": {
+					"name": "PasswordUserModel"
+				}
+			},
+			"ClaimUserModel": {
+				"type": "object",
+				"properties": {
+					"token": {
+						"example": "f7013d40-d639-4ff0-b7fc-8d1f7ff91322",
+						"type": "string"
+					},
+					"password": {
+						"example": "test123",
+						"type": "string"
+					}
+				},
+				"xml": {
+					"name": "PasswordUserModel"
+				}
+			},
+			"ResendClaimUserModel": {
+				"type": "object",
+				"properties": {
+					"email": {
+						"example": "abc+5@boardactive.com",
+						"type": "string"
+					}
+				},
+				"xml": {
+					"name": "ResendClaimUserModel"
+				}
+			},
+			"AckUserModel": {
+				"type": "object",
+				"properties": {
+					"token": {
+						"example": "a5d59596-2f70-448c-85ad-875f122549de",
+						"type": "string"
+					}
+				},
+				"xml": {
+					"name": "AckUserModel"
+				}
+			},
+			"UpdateUserModel": {
+				"type": "object",
+				"properties": {
+					"firstName": {
+						"example": "Michael",
+						"type": "string"
+					},
+					"lastName": {
+						"example": "Carlson",
+						"type": "string"
+					},
+					"password": {
+						"example": "test123",
+						"type": "string"
+					}
+				},
+				"xml": {
+					"name": "UpdateUserModel"
+				}
+			},
+			"FeedbackUserModel": {
+				"type": "object",
+				"properties": {
+					"data": {
+						"example": "Test feedback",
+						"type": "string"
+					}
+				},
+				"xml": {
+					"name": "FeedbackUserModel"
+				}
+			},
+			"CreatePaymentMethodModel": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"example": "test card",
+						"type": "string"
+					},
+					"nonce": {
+						"example": "fake-valid-nonce",
+						"type": "string"
+					}
+				},
+				"xml": {
+					"name": "CreatePaymentMethodModel"
+				}
+			},
+			"CheckAppModel": {
+				"type": "object",
+				"properties": {
+					"itunesUrl": {
+						"example": "https://itunes.apple.com/us/app/boardactive-addrop/id1398475486?mt=8",
+						"type": "string"
+					}
+				},
+				"xml": {
+					"name": "CheckAppModel"
+				}
+			},
+			"CreateAppModel": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"example": "test app",
+						"type": "string"
+					}
+				},
+				"xml": {
+					"name": "CreateAppModel"
+				}
+			},
+			"UpdateAppModel": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"example": "test app",
+						"type": "string"
+					},
+					"itunesUrl": {
+						"example": "https://itunes.apple.com/us/app/boardactive-addrop/id1398475486?mt=8",
+						"type": "string"
+					},
+					"googlePlayUrl": {
+						"example": "https://play.google.com/store/apps/details?id=com.boardactive.addrop&hl=en_US",
+						"type": "string"
+					}
+				},
+				"xml": {
+					"name": "UpdateAppModel"
+				}
+			},
+			"InviteUserToAppModel": {
+				"type": "object",
+				"properties": {
+					"email": {
+						"example": "abc+admin@boardactive.com",
+						"type": "string"
+					},
+					"firstName": {
+						"example": "Admin",
+						"type": "string"
+					},
+					"role": {
+						"example": "admin",
+						"type": "string"
+					}
+				},
+				"xml": {
+					"name": "InviteUserToAppModel"
+				}
+			},
+			"UpdateAppUserModel": {
+				"type": "object",
+				"properties": {
+					"role": {
+						"example": "owner",
+						"type": "string"
+					}
+				},
+				"xml": {
+					"name": "UpdateAppUserModel"
+				}
+			},
+			"CreateOrgModel": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"example": "test org",
+						"type": "string"
+					}
+				},
+				"xml": {
+					"name": "CreateOrgModel"
+				}
+			},
+			"UpdateWhiteLabelModel": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"example": "Test3",
+						"type": "string"
+					},
+					"homepageUrl": {
+						"example": "https://google.com",
+						"type": "string"
+					}
+				},
+				"xml": {
+					"name": "UpdateWhiteLabelModel"
+				}
+			},
+			"SubscribeModel": {
+				"type": "object",
+				"properties": {
+					"paymentMethodId": {
+						"example": 11,
+						"type": "integer"
+					},
+					"billingPlanId": {
+						"example": 3,
+						"type": "integer"
+					}
+				},
+				"xml": {
+					"name": "SubscribeModel"
+				}
+			},
+			"UnsubscribeModel": {
+				"type": "object",
+				"properties": {
+					"reason": {
+						"example": "test",
+						"type": "string"
+					}
+				},
+				"xml": {
+					"name": "UnsubscribeModel"
+				}
+			},
+			"UpdateAppConfigModel": {
+				"type": "object",
+				"properties": {
+					"iOSBundleIdentifier": {
+						"example": "com.boardactive.demo",
+						"type": "string"
+					},
+					"androidBundleIdentifier": {
+						"example": "com.boardactive.demo",
+						"type": "string"
+					},
+					"firebaseProjectId": {
+						"example": "boardactive-addrop",
+						"type": "string"
+					},
+					"firebasePrivateKey": {
+						"example": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDFCV6dGB1r7iuL\nletn/wVj9AZUQR2zYThIaNjpm9THTt+8XxVYvPyDdQqo5WqCsWfFi4LAqri2+Ugj\nKQgWU8T1XftSHthKHM6DA/AzXuKjO662hUKrFJGVtYupJsSvKnilMUxzyXg/rz0M\n8keO4widJo1YeaqHUGYlRt0f6cD5kwdVysEbFf06jBU4UYzlulvoY9AT+s0rc8Au\nXyb5VerPyWKXb3IQGfflC2YnN+m1Hyr6OukTY50HEb6Ktb+ZjYbqD3gW3Kipswhg\nuTGU0Q8DceFYL2yA8ZmfeAmjwsATJ1GT/hd432v7HDDvyiLb0b2oLPGjhhCDZ8pB\nNe47iMFlAgMBAAECggEAPV0yKLW6cAMwb5wEwRI04RC+Kd5PvC5yg2aX64VbKqlf\nV8C7GrRc5in85GXymnpaybStx4hD18RiGYUtXhq/s/UNkOFHVimLjVUcKTuLVPAA\n9RoijbptrtToBomq5qzQ/w2P9F2SBC900YPhEliVta+shJn7qIG7Fi/wLQC1V2RN\nTZURKKFdMA6ncw52o4CxRVNhOmmX3C9gbc9NyoqzcuS2txDIWgcF6O4jMIgLsNFI\nLkSqjgPyTdwhGRpx+3DfW4XNdOYuqep29xAME7onfKbyvy+zJYuZqOZvFF1F73ep\nU2AF9rxdhP/H59BiF68Q+faJdA6DMq+nqf/ePU3ErwKBgQDveRgtnplMydACJFih\nInSpI7VFvhvzzXdWk/rCHJi/1/oSq0pBPw+L3qkusE12cv7qe8IcPZln6lPNHyXe\n2Y6NlH8EvyNPeEScgJe9SNF9Sqzkz4Yt0rfeW8Iot83nfB5iaRVQUuQzT7OLPvht\nP7F2yG0UJEjjBUJzVumQz5TAIwKBgQDSoobbIhlKq8ZFg+pzXfyloTWkVR7E0z/t\nfflcWqQrrocg3ZIi7ZU4AVdIyJ8URNd/sgR4VwDbkStNXEp4+wK1OSDVpHn7ivVj\nG6BNP5jbAQ2XIbzNARW5ul/eQ+TpygG0wArSCdAYyb7XRssTWIt1Ev3wfddFv2Gv\nBL5vwbtM1wKBgBoY0j+2dvJdU+PH3jjBLoF4OLr++sDY9VZkDgG1aBgQC1qZfCAc\nJS+S9lD2OZrc8VbQYdj+BYfDi5pg+JmOj/Bx7F2yDsEMVD3R7bddBidnSewtiWvY\n+Nyslz4kubWuWwlSdlYokmHdH63fEOem90oAkZKOWbsTyagUIqP7WzSNAoGBAMQh\nUjD5r1M4X4abLtP90CLp2WkLWXssuXoKswar3/JMsMaJimm7kBZ2KTA8nuPgtkjR\nGhhz6viIVCnUpgPAtuTILSrB3FO9MID4WGuVrF9Au8beQ08gk3o9cMclsSGAV9ZW\ne7zYJkzujiUmZjG9YR3CcXJduvXXHr45TJoDasRBAoGAR/RBwcrUKRrVgIYmlRjC\nL3cyWkv4Qgjs1TkALMXVxwDO3uplamO531CvoMIE0FDYOxKNU6pj927qq7H6d6dm\nvnFJpkvbIRGhRIMv44KQJHsquWoV02KZ+IS0Fk6q93P3DV4Cc/ZUAt6yKRPtZtf/\njfHJrHoxPm9bQQRxsnHU5xQ=\n-----END PRIVATE KEY-----\n",
+						"type": "string"
+					},
+					"firebaseClientEmail": {
+						"example": "firebase-adminsdk-2b2wf@boardactive-addrop.iam.gserviceaccount.com",
+						"type": "string"
+					}
+				},
+				"xml": {
+					"name": "UpdateAppConfigModel"
+				}
+			},
+			"CreateAttributeModel": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"example": "favoriteDecimalNumber",
+						"type": "string"
+					},
+					"type": {
+						"example": "double",
+						"type": "string"
+					}
+				},
+				"xml": {
+					"name": "CreateAttributeModel"
+				}
+			},
+			"UpdateAttributeModel": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"example": "test test",
+						"type": "string"
+					}
+				},
+				"xml": {
+					"name": "UpdateAttributeModel"
+				}
+			},
+			"CreatePlaceModel": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"example": 4,
+						"type": "integer"
+					},
+					"guid": {
+						"example": "364284e4-9711-4924-aed6-6e33a77c30d4",
+						"type": "string"
+					},
+					"name": {
+						"example": "Test place",
+						"type": "string"
+					},
+					"radius": {
+						"example": 557,
+						"type": "integer"
+					},
+					"dateCreated": {
+						"example": "2019-01-18T19:36:17.568Z",
+						"type": "string"
+					},
+					"dateLastUpdated": {
+						"example": "2019-01-19T17:33:10.085Z",
+						"type": "string"
+					},
+					"dateArchived": {
+						"example": null,
+						"type": "string"
+					},
+					"address": {
+						"type": "object",
+						"properties": {
+							"id": {
+								"example": 4,
+								"type": "integer"
+							},
+							"name": {
+								"example": "1100 Howell Mill Rd NW, Atlanta, GA 30318, USA",
+								"type": "string"
+							},
+							"streetNumber": {
+								"example": 1100,
+								"type": "string"
+							},
+							"street": {
+								"example": "Howell Mill Road Northwest",
+								"type": "string"
+							},
+							"city": {
+								"example": "Atlanta",
+								"type": "string"
+							},
+							"state": {
+								"example": "GA",
+								"type": "string"
+							},
+							"postCode": {
+								"example": 30318,
+								"type": "string"
+							},
+							"country": {
+								"example": "United States",
+								"type": "string"
+							},
+							"countryShort": {
+								"example": "US",
+								"type": "string"
+							},
+							"latitude": {
+								"example": 33.7847648,
+								"type": "string"
+							},
+							"longitude": {
+								"example": -84.41221919999998,
+								"type": "string"
+							},
+							"guid": {
+								"example": "0da5689c-feda-4e78-9d26-f5b061491a0f",
+								"type": "string"
+							},
+							"dateCreated": {
+								"example": "2019-01-18T19:36:17.524Z",
+								"type": "string"
+							},
+							"dateLastUpdated": {
+								"example": "2019-01-19T17:33:10.075Z",
+								"type": "string"
+							},
+							"googlePLaceId": {
+								"example": "ChIJY7-afOsE9YgRjyh_Bksv1-c",
+								"type": "string"
+							},
+							"googlePlace": {
+								"type": "object",
+								"properties": {
+									"address_components": {
+										"type": "array",
+										"example": [
+											{
+												"long_name": 1100,
+												"short_name": 1100,
+												"types": [
+													"street_number"
+												]
+											},
+											{
+												"long_name": "Howell Mill Road Northwest",
+												"short_name": "Howell Mill Rd NW",
+												"types": [
+													"route"
+												]
+											},
+											{
+												"long_name": "Home Park",
+												"short_name": "Home Park",
+												"types": [
+													"neighborhood",
+													"political"
+												]
+											},
+											{
+												"long_name": "Atlanta",
+												"short_name": "Atlanta",
+												"types": [
+													"locality",
+													"political"
+												]
+											},
+											{
+												"long_name": "Fulton County",
+												"short_name": "Fulton County",
+												"types": [
+													"administrative_area_level_2",
+													"political"
+												]
+											},
+											{
+												"long_name": "Georgia",
+												"short_name": "GA",
+												"types": [
+													"administrative_area_level_1",
+													"political"
+												]
+											},
+											{
+												"long_name": "United States",
+												"short_name": "US",
+												"types": [
+													"country",
+													"political"
+												]
+											},
+											{
+												"long_name": 30318,
+												"short_name": 30318,
+												"types": [
+													"postal_code"
+												]
+											}
+										]
+									},
+									"adr_address": {
+										"type": "string",
+										"example": "<span class=\\\"street-address\\\">1100 Howell Mill Rd NW</span>, <span class=\\\"locality\\\">Atlanta</span>, <span class=\\\"region\\\">GA</span> <span class=\\\"postal-code\\\">30318</span>, <span class=\\\"country-name\\\">USA</span>"
+									},
+									"formatted_address": {
+										"type": "string",
+										"example": "1100 Howell Mill Rd NW, Atlanta, GA 30318, USA"
+									},
+									"geometry": {
+										"type": "object",
+										"properties": {
+											"location": {
+												"type": "object",
+												"properties": {
+													"lat": {
+														"type": "number",
+														"example": 33.7847648
+													},
+													"lng": {
+														"type": "number",
+														"example": -84.41221919999998
+													}
+												}
+											},
+											"viewport": {
+												"type": "object",
+												"properties": {
+													"south": {
+														"type": "number",
+														"example": 33.7835152697085
+													},
+													"west": {
+														"type": "number",
+														"example": -84.41347523029151
+													},
+													"north": {
+														"type": "number",
+														"example": 33.7862132302915
+													},
+													"east": {
+														"type": "number",
+														"example": -84.41077726970849
+													}
+												}
+											}
+										}
+									},
+									"icon": {
+										"type": "string",
+										"example": "https://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png"
+									},
+									"id": {
+										"type": "string",
+										"example": "ce286c26b8be62c4291e8e533095186835a54821"
+									},
+									"name": {
+										"type": "string",
+										"example": "1100 Howell Mill Rd NW"
+									},
+									"place_id": {
+										"type": "string",
+										"example": "ChIJizNDgusE9YgRfxbWfuP2yE4"
+									},
+									"reference": {
+										"type": "string",
+										"example": "ChIJizNDgusE9YgRfxbWfuP2yE4"
+									},
+									"scope": {
+										"type": "string",
+										"example": "GOOGLE"
+									},
+									"types": {
+										"type": "array",
+										"items": {
+											"type": "string",
+											"example": "premise"
+										}
+									},
+									"url": {
+										"type": "string",
+										"example": "https://maps.google.com/?q=1100+Howell+Mill+Rd+NW,+Atlanta,+GA+30318,+USA&ftid=0x88f504eb8243338b:0x4ec8f6e37ed6167f"
+									},
+									"utc_offset": {
+										"type": "integer",
+										"example": -300
+									},
+									"vicinity": {
+										"type": "string",
+										"example": "Atlanta"
+									},
+									"html_attributions": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										},
+										"example": []
+									}
+								}
+							}
+						}
+					},
+					"geofence": {
+						"type": "object",
+						"properties": {
+							"type": {
+								"type": "string",
+								"example": "polygon"
+							},
+							"points": {
+								"type": "array",
+								"example": [
+									{
+										"latitude": 33.7847648,
+										"longitude": -84.4122192
+									},
+									{
+										"latitude": 33.7947648,
+										"longitude": -84.4122192
+									},
+									{
+										"latitude": 33.8047648,
+										"longitude": -84.4122192
+									}
+								]
+							}
+						}
+					},
+					"xml": {
+						"name": "CreatePlaceModel"
+					}
+				}
+			},
+			"BulkCreatePlaceModel": {
+				"type": "object",
+				"properties": {
+					"places": {
+						"type": "array",
+						"example": [
+							{
+								"type": "Feature",
+								"properties": {
+									"Name": "255-34AU"
+								},
+								"geometry": {
+									"type": "Polygon",
+									"coordinates": [
+										[
+											[
+												-85.438691,
+												32.628544
+											],
+											[
+												-85.419788,
+												32.610536
+											],
+											[
+												-85.411479,
+												32.54765
+											],
+											[
+												-85.43623,
+												32.470897
+											],
+											[
+												-85.507935,
+												32.446145
+											],
+											[
+												-85.610512,
+												32.536763
+											],
+											[
+												-85.613002,
+												32.634932
+											],
+											[
+												-85.500465,
+												32.710447
+											],
+											[
+												-85.438691,
+												32.640602
+											],
+											[
+												-85.438691,
+												32.628544
+											]
+										]
+									]
+								}
+							},
+							{
+								"type": "Feature",
+								"properties": {
+									"Name": "255-34CFS"
+								},
+								"geometry": {
+									"type": "Polygon",
+									"coordinates": [
+										[
+											[
+												-84.899407,
+												32.497554
+											],
+											[
+												-84.892774,
+												32.498268
+											],
+											[
+												-84.863421,
+												32.498268
+											],
+											[
+												-84.830683,
+												32.363577
+											],
+											[
+												-84.96484,
+												32.250285
+											],
+											[
+												-85.000384,
+												32.269188
+											],
+											[
+												-85.043552,
+												32.315513
+											],
+											[
+												-84.992068,
+												32.353275
+											],
+											[
+												-84.93868,
+												32.397278
+											],
+											[
+												-84.924556,
+												32.405267
+											],
+											[
+												-84.925326,
+												32.409049
+											],
+											[
+												-84.926947,
+												32.412515
+											],
+											[
+												-84.927491,
+												32.417103
+											],
+											[
+												-84.928252,
+												32.423434
+											],
+											[
+												-84.927817,
+												32.424993
+											],
+											[
+												-84.926486,
+												32.427352
+											],
+											[
+												-84.926422,
+												32.432358
+											],
+											[
+												-84.926422,
+												32.435373
+											],
+											[
+												-84.92758,
+												32.445363
+											],
+											[
+												-84.929101,
+												32.457176
+											],
+											[
+												-84.929165,
+												32.464066
+											],
+											[
+												-84.92942,
+												32.466758
+											],
+											[
+												-84.922268,
+												32.472199
+											],
+											[
+												-84.921421,
+												32.476008
+											],
+											[
+												-84.912249,
+												32.479818
+											],
+											[
+												-84.904346,
+												32.491602
+											],
+											[
+												-84.899407,
+												32.497554
+											]
+										]
+									]
+								}
+							}
+						]
+					}
+				},
+				"xml": {
+					"name": "CreatePlaceModel"
+				}
+			},
+			"UpdatePlaceModel": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"example": 4,
+						"type": "integer"
+					},
+					"guid": {
+						"example": "364284e4-9711-4924-aed6-6e33a77c30d4",
+						"type": "string"
+					},
+					"name": {
+						"example": "Test place",
+						"type": "string"
+					},
+					"dateCreated": {
+						"example": "2019-01-18T19:36:17.568Z",
+						"type": "string"
+					},
+					"dateLastUpdated": {
+						"example": "2019-01-19T17:33:10.085Z",
+						"type": "string"
+					},
+					"dateArchived": {
+						"example": null
+					},
+					"geofence": {
+						"type": "object",
+						"properties": {
+							"type": {
+								"type": "string",
+								"example": "polygon"
+							},
+							"coordinates": {
+								"type": "array",
+								"example": [
+									{
+										"latitude": 33.7847648,
+										"longitude": -84.4122192
+									},
+									{
+										"latitude": 33.7947648,
+										"longitude": -83.4102192
+									},
+									{
+										"latitude": 33.8047648,
+										"longitude": -84.4122192
+									}
+								]
+							}
+						}
+					}
+				}
+			},
+			"CreatePlaceTypeModel": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"example": "test place"
+					},
+					"color": {
+						"type": "integer",
+						"example": 0
+					}
+				}
+			},
+			"UpdatePlaceTypeModel": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"example": "test place type"
+					},
+					"color": {
+						"type": "integer",
+						"example": 3
+					}
+				}
+			},
+			"CreateMessageModel": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"example": "test message",
+						"type": "string"
+					},
+					"places": {
+						"type": "array",
+						"example": [
+							{
+								"id": 2
+							}
+						]
+					},
+					"notification": {
+						"type": "object",
+						"properties": {
+							"heading": {
+								"example": "test heading",
+								"type": "string"
+							},
+							"subtitle": {
+								"example": "test sub",
+								"type": "string"
+							},
+							"contents": {
+								"example": "test contents",
+								"type": "string"
+							},
+							"androidOptions": {
+								"type": "object",
+								"properties": {
+									"test": {
+										"example": "test",
+										"type": "string"
+									}
+								}
+							},
+							"iosOptions": {
+								"type": "object",
+								"properties": {
+									"test": {
+										"example": "test",
+										"type": "string"
+									}
+								}
+							}
+						}
+					},
+					"notificationB": {
+						"type": "object",
+						"properties": {
+							"heading": {
+								"example": "test heading B",
+								"type": "string"
+							},
+							"subtitle": {
+								"example": "test sub B",
+								"type": "string"
+							},
+							"contents": {
+								"example": "test contents B",
+								"type": "string"
+							},
+							"androidOptions": {
+								"type": "object",
+								"properties": {
+									"test": {
+										"example": "testB",
+										"type": "string"
+									}
+								}
+							},
+							"iosOptions": {
+								"type": "object",
+								"properties": {
+									"test": {
+										"example": "testB",
+										"type": "string"
+									}
+								}
+							}
+						}
+					},
+					"schedule": {
+						"type": "object",
+						"properties": {
+							"dateStart": {
+								"example": "2019-03-30T00:32:22.417Z",
+								"type": "string"
+							},
+							"dateStop": {
+								"example": "2019-12-30T00:32:22.417Z",
+								"type": "string"
+							},
+							"timeStart": {
+								"example": "00:00:00",
+								"type": "string"
+							},
+							"timeStop": {
+								"example": "24:00:00",
+								"type": "string"
+							},
+							"limitDaily": {
+								"example": 1,
+								"type": "integer"
+							},
+							"limitTotal": {
+								"example": 5,
+								"type": "integer"
+							},
+							"isLive": {
+								"example": false,
+								"type": "boolean"
+							}
+						}
+					},
+					"goal": {
+						"type": "object",
+						"properties": {
+							"isSent": {
+								"example": 0,
+								"type": "integer"
+							},
+							"isReceived": {
+								"example": 0,
+								"type": "integer"
+							},
+							"isOpened": {
+								"example": 0,
+								"type": "integer"
+							},
+							"isVisited": {
+								"example": 1,
+								"type": "integer"
+							},
+							"places": {
+								"type": "array",
+								"example": [
+									{
+										"id": 2
+									},
+									{
+										"id": 3
+									}
+								]
+							}
+						}
+					},
+					"audiences": {
+						"type": "array",
+						"example": [
+							{
+								"id": 2,
+								"name": "test",
+								"appId": 1,
+								"userIdsByPage": [
+									3,
+									2,
+									null,
+									5
+								],
+								"usersTotal": 1,
+								"pageLimit": 10,
+								"pagesTotal": 1,
+								"whereClause": " AND properties->'stock'->>'name'::TEXT ilike 'abc' AND properties->'stock'->>'name'::TEXT not ilike '%eal%' AND properties->'stock'->>'name'::TEXT ilike '%ael' AND properties->'stock'->>'name'::TEXT ilike '%cha%'",
+								"userPredicates": [
+									{
+										"type": "string",
+										"field": "name",
+										"value": "abc",
+										"operator": "=="
+									},
+									{
+										"type": "string",
+										"field": "name",
+										"value": "eal",
+										"operator": "!="
+									},
+									{
+										"type": "string",
+										"field": "name",
+										"value": "ael",
+										"operator": "$="
+									},
+									{
+										"type": "string",
+										"field": "name",
+										"value": "cha",
+										"operator": "^$"
+									}
+								],
+								"eventPredicates": [],
+								"dateCreated": "2019-06-14T02:23:09.372Z",
+								"dateLastUpdated": "2019-06-4T02:23:09.372Z"
+							}
+						]
+					}
+				}
+			},
+			"UpdateMessageModel": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"example": 1,
+						"type": "integer"
+					},
+					"name": {
+						"example": "test ab testing",
+						"type": "string"
+					},
+					"guid": {
+						"example": "58cae426-677d-4afe-be24-67f2e730aebf",
+						"type": "string"
+					},
+					"status": {
+						"example": "Live",
+						"type": "string"
+					},
+					"dateCreated": {
+						"example": "2020-03-10T16:47:50.354Z",
+						"type": "string"
+					},
+					"dateLastUpdated": {
+						"example": "2020-04-14T17:42:48.089Z",
+						"type": "string"
+					},
+					"isTrashed": {
+						"example": false,
+						"type": "boolean"
+					},
+					"places": {
+						"type": "array",
+						"example": [
+							{
+								"id": 517,
+								"guid": "ec2f574a-a8ba-4a9c-9602-7981f8c1827b",
+								"name": "Home",
+								"radius": 73,
+								"dateCreated": "2019-08-23T13:51:00.635Z",
+								"dateLastUpdated": "2019-08-23T13:51:33.909Z",
+								"dateTrashed": null,
+								"isTrashed": false,
+								"placeType": null,
+								"address": [
+									{
+										"id": 519,
+										"name": "33.785203898278304°, -84.41331730878892°",
+										"streetNumber": null,
+										"street": null,
+										"city": null,
+										"state": null,
+										"postCode": null,
+										"country": "United States",
+										"countryShort": "US",
+										"coordinate": [
+											{
+												"latitude": "33.785203898278304",
+												"longitude": "-84.41331730878892"
+											}
+										],
+										"guid": "6c8c47d5-d2f5-4396-bec6-85f485e17a2b",
+										"dateCreated": "2019-08-23T13:51:00.239Z",
+										"dateLastUpdated": "2019-08-31T13:51:00.239Z",
+										"dateTrashed": null,
+										"isTrashed": false,
+										"googlePlaceId": null,
+										"googlePlace": null
+									}
+								]
+							}
+						]
+					},
+					"notification": {
+						"type": "object",
+						"properties": {
+							"id": {
+								"example": 1186,
+								"type": "integer"
+							},
+							"appId": {
+								"example": 1,
+								"type": "integer"
+							},
+							"guid": {
+								"example": "500f2b7a-1650-4971-910f-5179000f029e",
+								"type": "string"
+							},
+							"heading": {
+								"example": "test heading",
+								"type": "string"
+							},
+							"inbox": {
+								"example": null,
+								"type": "string"
+							},
+							"subtitle": {
+								"example": "test sub",
+								"type": "string"
+							},
+							"contents": {
+								"example": "test contents",
+								"type": "string"
+							},
+							"imageId": {
+								"example": null,
+								"type": "string"
+							},
+							"androidOptions": {
+								"type": "object",
+								"properties": {
+									"test": {
+										"example": "test",
+										"type": "string"
+									}
+								}
+							},
+							"iosOptions": {
+								"type": "object",
+								"properties": {
+									"test": {
+										"example": "test",
+										"type": "string"
+									}
+								}
+							},
+							"messageId": {
+								"example": 1185,
+								"type": "integer"
+							},
+							"createdByUserId": {
+								"example": 1,
+								"type": "integer"
+							},
+							"lastUpdatedByUserId": {
+								"example": 1,
+								"type": "integer"
+							},
+							"dateCreated": {
+								"example": "2020-03-10T16:47:50.374Z",
+								"type": "string"
+							},
+							"dateLastUpdated": {
+								"example": "2020-04-14T17:42:48.056Z",
+								"type": "string"
+							},
+							"dateDeleted": {
+								"example": null,
+								"type": "string"
+							},
+							"dateTrashed": {
+								"example": null,
+								"type": "string"
+							},
+							"messageData": {
+								"example": {},
+								"type": "object"
+							},
+							"image": {
+								"example": {},
+								"type": "object"
+							},
+							"imageUrl": {
+								"example": null,
+								"type": "object"
+							}
+						}
+					},
+					"notificationB": {
+						"type": "object",
+						"properties": {
+							"id": {
+								"example": 1186,
+								"type": "integer"
+							},
+							"appId": {
+								"example": 1,
+								"type": "integer"
+							},
+							"guid": {
+								"example": "500f2b7a-1650-4971-910f-5179000f029e",
+								"type": "string"
+							},
+							"heading": {
+								"example": "test heading B",
+								"type": "string"
+							},
+							"inbox": {
+								"example": null,
+								"type": "string"
+							},
+							"subtitle": {
+								"example": "test sub B",
+								"type": "string"
+							},
+							"contents": {
+								"example": "test contents B",
+								"type": "string"
+							},
+							"imageId": {
+								"example": null,
+								"type": "string"
+							},
+							"androidOptions": {
+								"type": "object",
+								"properties": {
+									"test": {
+										"example": "testB",
+										"type": "string"
+									}
+								}
+							},
+							"iosOptions": {
+								"type": "object",
+								"properties": {
+									"test": {
+										"example": "testB",
+										"type": "string"
+									}
+								}
+							},
+							"messageId": {
+								"example": 1185,
+								"type": "integer"
+							},
+							"createdByUserId": {
+								"example": 1,
+								"type": "integer"
+							},
+							"lastUpdatedByUserId": {
+								"example": 1,
+								"type": "integer"
+							},
+							"dateCreated": {
+								"example": "2020-03-10T16:47:50.374Z",
+								"type": "string"
+							},
+							"dateLastUpdated": {
+								"example": "2020-04-14T17:42:48.056Z",
+								"type": "string"
+							},
+							"dateDeleted": {
+								"example": null,
+								"type": "string"
+							},
+							"dateTrashed": {
+								"example": null,
+								"type": "string"
+							},
+							"messageData": {
+								"example": {},
+								"type": "object"
+							},
+							"counts": {
+								"type": "object",
+								"properties": {
+									"sent": {
+										"example": 1,
+										"type": "string"
+									},
+									"received": {
+										"example": 1,
+										"type": "string"
+									},
+									"opened": {
+										"example": "0",
+										"type": "string"
+									}
+								}
+							},
+							"image": {
+								"example": {},
+								"type": "object"
+							},
+							"imageUrl": {
+								"example": null,
+								"type": "object"
+							}
+						}
+					},
+					"audiences": {
+						"type": "array",
+						"example": [
+							{
+								"id": 2
+							}
+						]
+					},
+					"schedule": {
+						"type": "object",
+						"properties": {
+							"id": {
+								"example": 710,
+								"type": "integer"
+							},
+							"guid": {
+								"example": "d557dc36-1a1d-4c99-bce2-2e218e6b5971",
+								"type": "string"
+							},
+							"messageId": {
+								"example": 1185,
+								"type": "integer"
+							},
+							"dateStart": {
+								"example": "2019-03-30T00:32:22.417Z",
+								"type": "string"
+							},
+							"dateStop": {
+								"example": "2019-12-30T00:32:22.417Z",
+								"type": "string"
+							},
+							"timeStart": {
+								"example": "00:00:00",
+								"type": "string"
+							},
+							"timeStop": {
+								"example": "24:00:00",
+								"type": "string"
+							},
+							"limitDaily": {
+								"example": 1,
+								"type": "integer"
+							},
+							"limitTotal": {
+								"example": 5,
+								"type": "integer"
+							},
+							"isLive": {
+								"example": false,
+								"type": "boolean"
+							},
+							"timeBetween": {
+								"example": 1,
+								"type": "integer"
+							},
+							"inbox": {
+								"example": {},
+								"type": "object"
+							},
+							"dateCreated": {
+								"example": "2020-03-10T16:47:50.392Z",
+								"type": "string"
+							},
+							"dateLastUpdated": {
+								"example": "2020-04-14T17:42:48.080Z",
+								"type": "string"
+							},
+							"dateTrashed": {
+								"example": null,
+								"type": "string"
+							},
+							"isTrashed": {
+								"example": false,
+								"type": "boolean"
+							}
+						}
+					},
+					"goal": {
+						"type": "object",
+						"properties": {
+							"id": {
+								"example": 710,
+								"type": "integer"
+							},
+							"guid": {
+								"example": "d557dc36-1a1d-4c99-bce2-2e218e6b5971",
+								"type": "string"
+							},
+							"messageId": {
+								"example": 1185,
+								"type": "integer"
+							},
+							"isSent": {
+								"example": 0,
+								"type": "integer"
+							},
+							"isReceived": {
+								"example": 0,
+								"type": "integer"
+							},
+							"isOpened": {
+								"example": 0,
+								"type": "integer"
+							},
+							"isVisited": {
+								"example": 1,
+								"type": "integer"
+							},
+							"inbox": {
+								"example": {},
+								"type": "object"
+							},
+							"dateCreated": {
+								"example": "2020-03-10T16:47:50.392Z",
+								"type": "string"
+							},
+							"dateLastUpdated": {
+								"example": "2020-04-14T17:42:48.080Z",
+								"type": "string"
+							},
+							"dateTrashed": {
+								"example": null,
+								"type": "string"
+							},
+							"isTrashed": {
+								"example": false,
+								"type": "boolean"
+							},
+							"places": {
+								"type": "array",
+								"example": [
+									{
+										"id": 2
+									}
+								]
+							}
+						}
+					}
+				}
+			},
+			"SendTestMessageModel": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"example": "test message",
+						"type": "string"
+					},
+					"places": {
+						"type": "array",
+						"example": [
+							{
+								"id": 2
+							},
+							{
+								"id": 3
+							}
+						]
+					},
+					"notification": {
+						"type": "object",
+						"properties": {
+							"heading": {
+								"example": "test heading",
+								"type": "string"
+							},
+							"subtitle": {
+								"example": "test sub",
+								"type": "string"
+							},
+							"contents": {
+								"example": "test contents",
+								"type": "string"
+							},
+							"androidOptions": {
+								"type": "object",
+								"properties": {
+									"test": {
+										"example": "test",
+										"type": "string"
+									}
+								}
+							},
+							"iosOptions": {
+								"type": "object",
+								"properties": {
+									"test": {
+										"example": "test",
+										"type": "string"
+									}
+								}
+							},
+							"messageData": {
+								"example": "{\n\"title\": \"An awesome promotion\",\n\"phoneNumber\": \"(678) 333-2200\"}",
+								"type": "string"
+							}
+						}
+					},
+					"schedule": {
+						"type": "object",
+						"properties": {
+							"dateStart": {
+								"example": "2019-03-30T00:32:22.417Z",
+								"type": "string"
+							},
+							"dateStop": {
+								"example": "2019-12-30T00:32:22.417Z",
+								"type": "string"
+							},
+							"timeStart": {
+								"example": "00:00:00",
+								"type": "string"
+							},
+							"timeStop": {
+								"example": "24:00:00",
+								"type": "string"
+							},
+							"limitDaily": {
+								"example": 1,
+								"type": "integer"
+							},
+							"limitTotal": {
+								"example": 5,
+								"type": "integer"
+							},
+							"isLive": {
+								"example": true,
+								"type": "boolean"
+							}
+						}
+					},
+					"goal": {
+						"type": "object",
+						"properties": {
+							"isSent": {
+								"example": 0,
+								"type": "integer"
+							},
+							"isReceived": {
+								"example": 0,
+								"type": "integer"
+							},
+							"isOpened": {
+								"example": 0,
+								"type": "integer"
+							},
+							"isVisited": {
+								"example": 1,
+								"type": "integer"
+							},
+							"places": {
+								"type": "array",
+								"example": [
+									{
+										"id": 2
+									},
+									{
+										"id": 3
+									}
+								]
+							}
+						}
+					}
+				}
+			},
+			"SearchMobileUserModel": {
+				"type": "object",
+				"properties": {
+					"userPredicates": {
+						"example": 15,
+						"type": "array"
+					},
+					"perPage": {
+						"example": 15,
+						"type": "integer"
+					},
+					"page": {
+						"example": 1,
+						"type": "integer"
+					}
+				}
+			},
+			"UpdateMobileUserModel": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"example": 1,
+						"type": "integer"
+					},
+					"appId": {
+						"example": 1,
+						"type": "integer"
+					},
+					"appVersion": {
+						"example": "0.1.10",
+						"type": "string"
+					},
+					"deviceOS": {
+						"example": "ios",
+						"type": "string"
+					},
+					"deviceOSVersion": {
+						"example": "1.2",
+						"type": "string"
+					},
+					"deviceType": {
+						"example": "iPhone X",
+						"type": "string"
+					},
+					"deviceToken": {
+						"example": "ybQMdSaLQBqs:APA91bFppO52ilwC9yOUFVt7cnnKaDTB7h9NsnUjtDTFwYGIPp0OMik_pZgbeFY4UjbcsBUUtedIoxUtWfmzIJmcinaf2EFJ-xrVJjS_VbNitswDb7fkOT-A3LBJbzs46IfruvO6XSt6",
+						"type": "string"
+					},
+					"attributes": {
+						"type": "object",
+						"properties": {
+							"custom": {
+								"type": "object"
+							},
+							"stock": {
+								"type": "object",
+								"properties": {
+									"name": {
+										"example": "Sparkly Llamma",
+										"type": "string"
+									},
+									"email": {
+										"example": "test@gmail.com",
+										"type": "string"
+									},
+									"phone": {
+										"example": null,
+										"type": "string"
+									},
+									"gender": {
+										"example": null,
+										"type": "string"
+									},
+									"dateBorn": {
+										"example": null,
+										"type": "string"
+									},
+									"deviceOS": {
+										"example": "ios",
+										"type": "string"
+									},
+									"sentCount": {
+										"example": 0,
+										"type": "integer"
+									},
+									"deviceType": {
+										"example": "iPhone X",
+										"type": "string"
+									},
+									"twitterUrl": {
+										"example": null,
+										"type": "string"
+									},
+									"dateCreated": {
+										"example": "2019-06-13T19:30:45.647Z",
+										"type": "string"
+									},
+									"deviceToken": {
+										"example": "ybQMdSaLQBqs:APA91bFppO52ilwC9yOUFVt7cnnKaDTB7h9NsnUjtDTFwYGIPp0OMik_pZgbeFY4UjbcsBUUtedIoxUtWfmzIJmcinaf2EFJ-xrVJjS_VbNitswDb7fkOT-A3LBJbzs46IfruvO6XSt6",
+										"type": "string"
+									},
+									"facebookUrl": {
+										"example": null,
+										"type": "string"
+									},
+									"linkedInUrl": {
+										"example": null,
+										"type": "string"
+									},
+									"openedCount": {
+										"example": 0,
+										"type": "string"
+									},
+									"instagramUrl": {
+										"example": null,
+										"type": "string"
+									},
+									"visitedCount": {
+										"example": 0,
+										"type": "string"
+									},
+									"receivedCount": {
+										"example": 0,
+										"type": "string"
+									},
+									"goalPercentage": {
+										"example": null,
+										"type": "string"
+									},
+									"deviceOSVersion": {
+										"example": "1.2",
+										"type": "string"
+									},
+									"dateLastOpenedApp": {
+										"example": "2019-06-13T19:30:45.647Z",
+										"type": "string"
+									},
+									"locationPermission": {
+										"example": false,
+										"type": "boolean"
+									},
+									"notificationPermission": {
+										"example": false,
+										"type": "boolean"
+									},
+									"dateLocationPermissionRequested": {
+										"example": null,
+										"type": "string"
+									},
+									"dateNotificationPermissionRequested": {
+										"example": null,
+										"type": "string"
+									},
+									"avatarUrl": {
+										"example": "",
+										"type": "string"
+									}
+								}
+							}
+						}
+					},
+					"guid": {
+						"example": null,
+						"type": "string"
+					},
+					"dateCreated": {
+						"example": "2019-06-13T19:30:45.648Z",
+						"type": "string"
+					},
+					"dateLastUpdated": {
+						"example": "2019-06-13T19:30:45.648Z",
+						"type": "string"
+					},
+					"dateLastOpenedApp": {
+						"example": "2019-06-13T19:30:45.648Z",
+						"type": "string"
+					},
+					"inbox": {
+						"type": "object"
+					}
+				}
+			},
+			"CreateEventModel": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"example": "test",
+						"type": "string"
+					}
+				}
+			},
+			"UpdateEventModel": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"example": "test",
+						"type": "string"
+					}
+				}
+			},
+			"CreateAudienceModel": {
+				"type": "object",
+				"properties": {
+					"mobileUserSearchId": {
+						"example": 6,
+						"type": "integer"
+					},
+					"name": {
+						"example": "test",
+						"type": "string"
+					}
+				}
+			},
+			"UpdateAudienceModel": {
+				"type": "object",
+				"properties": {
+					"mobileUserSearchId": {
+						"example": 6,
+						"type": "integer"
+					},
+					"name": {
+						"example": "test",
+						"type": "string"
+					}
+				}
+			},
+			"GodUpdateUserModel": {
+				"type": "object",
+				"properties": {
+					"email": {
+						"example": "abc@boardactive.com",
+						"type": "string"
+					},
+					"password": {
+						"example": "test123",
+						"type": "string"
+					},
+					"isApprovedByDoug": {
+						"example": false,
+						"type": "boolean"
+					},
+					"isCompliant": {
+						"example": true,
+						"type": "boolean"
+					}
+				}
+			}
+		},
+		"securitySchemes": {
+			"api_key": {
+				"type": "apiKey",
+				"in": "header",
+				"name": "auth-token"
+			},
+			"cookieAuth": {
+				"type": "apiKey",
+				"in": "cookie",
+				"name": "boardactive-session"
+			}
+		}
+	}
+}
